@@ -11,7 +11,6 @@ import (
 	"time"
 )
 
-// VMStorage节点实现
 type vmStorageNode struct {
 	config VMStorageConfig
 	cmd    *exec.Cmd
@@ -26,7 +25,6 @@ func NewVMStorageNode(config VMStorageConfig) *vmStorageNode {
 }
 
 func (v *vmStorageNode) Start(ctx context.Context) error {
-	// 创建数据目录
 	if err := os.MkdirAll(v.config.StorageDataPath, 0755); err != nil {
 		return fmt.Errorf("failed to create storage directory: %v", err)
 	}
@@ -85,7 +83,6 @@ func (v *vmStorageNode) Start(ctx context.Context) error {
 		return fmt.Errorf("failed to start vmstorage %s: %v", v.config.Name, err)
 	}
 
-	// 等待一段时间让 vmstorage 完全启动
 	time.Sleep(2 * time.Second)
 
 	log.Printf("VMStorage node %s started successfully", v.config.Name)
