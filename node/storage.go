@@ -100,14 +100,11 @@ func (v *vmStorageNode) Stop() error {
 	if v.cmd != nil && v.cmd.Process != nil {
 		log.Printf("Stopping VMStorage node: %s", v.config.Name)
 
-		// 发送SIGTERM信号
 		if err := v.cmd.Process.Signal(syscall.SIGTERM); err != nil {
 			log.Printf("Failed to send SIGTERM to %s: %v", v.config.Name, err)
-			// 强制杀死进程
 			return v.cmd.Process.Kill()
 		}
 
-		// 等待进程退出
 		return v.cmd.Wait()
 	}
 	return nil
