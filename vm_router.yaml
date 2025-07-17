@@ -1,0 +1,48 @@
+# 路由器配置文件
+listen_addr: ":8300"
+default_storage: "short_term"
+timeout: "30s"
+max_retries: 3
+enable_compression: true
+log_level: "info"
+
+# 存储节点配置
+storage_nodes:
+  long_term: "http://192.168.8.244:8480/insert/0/prometheus" # /insert/0/prometheus/api/v1/write
+  short_term: "http://192.168.8.244:8580/insert/0/prometheus"
+
+# 路由规则配置
+routing_rules:
+  - name: "long_term_by_lifecycle"
+    label_name: "lifecycle"
+    label_value: "long"
+    storage_node: "long_term"
+    priority: 100
+
+  - name: "short_term_by_lifecycle"
+    label_name: "lifecycle"
+    label_value: "short"
+    storage_node: "short_term"
+    priority: 100
+
+  - name: "long_term_by_regex"
+    label_name: "lifecycle"
+    label_regex: "^(permanent|archive|historical)$"
+    storage_node: "long_term"
+    priority: 90
+
+  - name: "short_term_by_regex"
+    label_name: "lifecycle"
+    label_regex: "^(temp|temporary|ephemeral)$"
+    storage_node: "short_term"
+    priority: 90
+
+  - name: "business_metrics"
+    metric_regex: "^(business_|revenue_|user_)"
+    storage_node: "long_term"
+    priority: 80
+
+  - name: "system_metrics"
+    metric_regex: "^(cpu_|memory_|disk_|network_)"
+    storage_node: "short_term"
+    priority: 80

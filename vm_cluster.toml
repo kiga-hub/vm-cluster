@@ -1,0 +1,56 @@
+[[vmstorage]]
+name = "vmstorage_long_term"
+storageDataPath = "./data/vmstorage_long_term"
+retentionPeriod = "5y"
+precisionBits = 32
+minFreeDiskSpaceBytes = 1e9
+httpListenAddr = "192.168.8.244:8400"
+vminsertAddr = "192.168.8.244:8401"
+vmselectAddr = "192.168.8.244:8402"
+maxIngestionRate = 1000000
+enable = true
+proxy = false
+
+[[vmstorage]]
+name = "vmstorage_short_term"
+storageDataPath = "./data/vmstorage_short_term"
+retentionPeriod = "60d"
+precisionBits = 32
+minFreeDiskSpaceBytes = 1e9
+httpListenAddr = "192.168.8.244:8500"
+vminsertAddr = "192.168.8.244:8501"
+vmselectAddr = "192.168.8.244:8502"
+maxIngestionRate = 500000
+enable = true
+proxy = false
+
+[[vminsert]]
+name = "vminsert_long_term"
+httpListenAddr = "192.168.8.244:8480"
+storageNodes = ["192.168.8.244:8401"]
+replicationFactor = 1
+maxLabelsPerTimeseries = 30
+maxLabelNameLen = 256
+maxLabelValueLen = 16384
+enable = true
+
+[[vminsert]]
+name = "vminsert_short_term"
+httpListenAddr = "192.168.8.244:8580"
+storageNodes = ["192.168.8.244:8501"]
+replicationFactor = 1
+maxLabelsPerTimeseries = 30
+maxLabelNameLen = 256
+maxLabelValueLen = 16384
+enable = true
+
+[[vmselect]]
+name = "vmselect"
+httpListenAddr = "192.168.8.244:8200"
+storageNodes = ["192.168.8.244:8402"]
+maxConcurrentRequests = 1000
+maxQueryLen = 16384
+maxSamplesPerQuery = 1000000
+searchMaxQueryDuration = "24h"
+datapath = "./tmp"
+enable = true
